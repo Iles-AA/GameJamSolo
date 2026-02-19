@@ -3,8 +3,11 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     public float attackRange = 1.5f;
-    public int attackDamage = 10;
+    public int attackDamage = 1;
     public SpriteRenderer spriteRenderer;
+    public PlayerHealth playerHealth; 
+
+    public int knockbackForce = 5;
 
     private Animator anim; 
 
@@ -15,7 +18,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) && playerHealth != null && playerHealth.isAlive)
         {
             PerformAttack();
         }
@@ -39,7 +42,11 @@ public class PlayerAttack : MonoBehaviour
                 
                 if(Vector2.Dot(attackDirection, directionToEnemy) > 0)
                 {
-                    Debug.Log("Hit.");
+                    EnemyAI enemyScript = collider.GetComponent<EnemyAI>();
+                    enemyScript.TakeDamage(attackDamage);
+
+                    Vector2 knockback = (collider.transform.position - transform.position).normalized;
+                    enemyScript.rb.AddForce(knockback * knockbackForce, ForceMode2D.Impulse);
                 }
             }
         }

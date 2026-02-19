@@ -10,6 +10,8 @@ public class TopDownMovement : MonoBehaviour
 
     public SpriteRenderer spriteRenderer;
 
+    public PlayerHealth playerHealth;
+
 
     public Rigidbody2D physics;
     private Vector2 direction;
@@ -24,7 +26,10 @@ public class TopDownMovement : MonoBehaviour
 
     private void Update()
     {
-        float magnitude = moveAction.action.ReadValue<Vector2>().sqrMagnitude;
+
+        if (playerHealth.isAlive)
+        {
+                    float magnitude = moveAction.action.ReadValue<Vector2>().sqrMagnitude;
         direction = moveAction.action.ReadValue<Vector2>();
 
         animator.SetFloat("Speed", magnitude);
@@ -37,8 +42,9 @@ public class TopDownMovement : MonoBehaviour
         {
             spriteRenderer.flipX = false;
         }
-    }
 
+    }
+}
     private void FixedUpdate()
     {
         physics.MovePosition(physics.position + direction.normalized * moveSpeed * Time.fixedDeltaTime);    
