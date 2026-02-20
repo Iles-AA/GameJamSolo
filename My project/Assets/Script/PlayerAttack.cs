@@ -18,7 +18,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && playerHealth != null && playerHealth.isAlive)
+        if(Input.GetMouseButtonDown(0) && playerHealth != null && playerHealth.isAlive)
         {
             PerformAttack();
         }
@@ -39,14 +39,17 @@ public class PlayerAttack : MonoBehaviour
             if(collider.CompareTag("Ennemy")) 
             {
                 Vector2 directionToEnemy = (collider.transform.position - transform.position).normalized;
-                
+
                 if(Vector2.Dot(attackDirection, directionToEnemy) > 0)
                 {
                     EnemyAI enemyScript = collider.GetComponent<EnemyAI>();
-                    enemyScript.TakeDamage(attackDamage);
+                    if (enemyScript != null)
+                    {
+                        enemyScript.TakeDamage(attackDamage);
 
-                    Vector2 knockback = (collider.transform.position - transform.position).normalized;
-                    enemyScript.rb.AddForce(knockback * knockbackForce, ForceMode2D.Impulse);
+                        Vector2 knockback = (collider.transform.position - transform.position).normalized;
+                        enemyScript.rb.AddForce(knockback * knockbackForce, ForceMode2D.Impulse);
+                    }
                 }
             }
         }
